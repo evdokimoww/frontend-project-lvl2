@@ -2,11 +2,11 @@ import { readFileSync } from 'fs';
 import _ from 'lodash';
 import path from 'path';
 
-const normalizeFilePath = (filepath) => readFileSync(path.resolve(process.cwd(), filepath), { encoding: 'ascii' });
+const getFileData = (filepath) => readFileSync(path.resolve(process.cwd(), filepath), { encoding: 'ascii' });
 
 const genDiff = (filepath1, filepath2) => {
-  const file1 = JSON.parse(normalizeFilePath(filepath1));
-  const file2 = JSON.parse(normalizeFilePath(filepath2));
+  const file1 = JSON.parse(getFileData(filepath1));
+  const file2 = JSON.parse(getFileData(filepath2));
 
   const mergedObj = { ...file1, ...file2 };
   const keys = Object.keys(mergedObj).sort();

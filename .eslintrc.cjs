@@ -2,14 +2,17 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
+    "jest/globals": true,
   },
   extends: [
     'airbnb-base',
   ],
   parserOptions: {
-    ecmaVersion: 13,
+    ecmaVersion: 2020,
     sourceType: 'module',
   },
   rules: {
+    "no-underscore-dangle": [2, { "allow": ["__filename", "__dirname"] }],
   },
+  plugins: ["jest"],
 };
