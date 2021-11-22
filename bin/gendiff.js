@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import {Command} from 'commander'; // include commander in git clone of commander repo
+import {Command} from 'commander';
+import genDiff from '../diff.js';
 
 const program = new Command();
 
@@ -8,6 +9,7 @@ program
   .argument('<filepath1>')
   .argument('<filepath2>')
   .option('-V, --version', 'output the version number')
-  .option('-f, --format [type]', 'output format');
+  .option('-f, --format [type]', 'output format')
+  .action((filepath1, filepath2) => console.log(genDiff(filepath1, filepath2)));
 
 program.parse();
