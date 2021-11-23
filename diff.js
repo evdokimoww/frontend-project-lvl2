@@ -1,10 +1,15 @@
 import _ from 'lodash';
+import path from 'path';
+import { readFileSync } from 'fs';
 // eslint-disable-next-line import/extensions
 import parseFile from './parser.js';
 
+const fileFormat = (filepath) => path.extname(filepath);
+const fileData = (filepath) => readFileSync(path.resolve(process.cwd(), filepath), { encoding: 'ascii' });
+
 const genDiff = (filepath1, filepath2) => {
-  const file1 = parseFile(filepath1);
-  const file2 = parseFile(filepath2);
+  const file1 = parseFile(fileData(filepath1), fileFormat(filepath1));
+  const file2 = parseFile(fileData(filepath2), fileFormat(filepath2));
 
   const mergedObj = { ...file1, ...file2 };
   const keys = Object.keys(mergedObj).sort();
