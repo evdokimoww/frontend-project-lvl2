@@ -9,3 +9,6 @@
 
 ### gendiff .yaml
 [![asciicast](https://asciinema.org/a/QdyainInVbLVjruQ1zGlmanRh.svg)](https://asciinema.org/a/QdyainInVbLVjruQ1zGlmanRh)
+
+### gendiff format output
+[![asciicast](https://asciinema.org/a/vTQro8QiOE0DltVOm0IWEHnLM.svg)](https://asciinema.org/a/vTQro8QiOE0DltVOm0IWEHnLM)

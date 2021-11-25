@@ -3,34 +3,94 @@ import path from 'path';
 import { readFileSync } from 'fs';
 // eslint-disable-next-line import/extensions
 import parseFile from './parser.js';
+// eslint-disable-next-line import/extensions
+import stylish from './formatter.js';
 
 const fileFormat = (filepath) => path.extname(filepath);
 const fileData = (filepath) => readFileSync(path.resolve(process.cwd(), filepath), { encoding: 'ascii' });
 
-const genDiff = (filepath1, filepath2) => {
-  const file1 = parseFile(fileData(filepath1), fileFormat(filepath1));
-  const file2 = parseFile(fileData(filepath2), fileFormat(filepath2));
+const isObject = (element) => typeof element === 'object';
+const notANull = (element) => (element === null ? 'null' : element);
 
-  const mergedObj = { ...file1, ...file2 };
-  const keys = Object.keys(mergedObj).sort();
-
-  const result = [];
-  for (let i = 0; i < keys.length; i += 1) {
-    const key = keys[i];
-
-    if (_.has(file1, key) && _.has(file2, key) && file1[key] === file2[key]) {
-      result.push(`    ${key}: ${file1[key]}`);
-    } else if (_.has(file1, key) && _.has(file2, key) && file1[key] !== file2[key]) {
-      result.push(`  - ${key}: ${file1[key]}`);
-      result.push(`  + ${key}: ${file2[key]}`);
-    } else if (!_.has(file1, key)) {
-      result.push(`  + ${key}: ${file2[key]}`);
-    } else if (!_.has(file2, key)) {
-      result.push(`  - ${key}: ${file1[key]}`);
+const getDiffStatus = (object1, object2, key) => {
+  if (_.has(object1, key) && _.has(object2, key)) {
+    if ((typeof object1[key] === 'object' && typeof object2[key] === 'object') || object1[key] === object2[key]) {
+      return 'identical';
     }
   }
+  if (_.has(object1, key) && _.has(object2, key) && object1[key] !== object2[key]) {
+    return 'changed';
+  }
+  if (!_.has(object1, key)) {
+    return 'added';
+  }
+  return 'deleted';
+};
 
-  return `{\n${result.join('\n')}\n}`;
+const buildAst = (node1, node2) => {
+  const iter = (obj1, obj2, result, deepLevel) => {
+    const mergeNode = { ...obj1, ...obj2 };
+    const keys = Object.keys(mergeNode).sort();
+
+    return keys
+      .map((key) => {
+        const ast = {
+          key,
+        };
+
+        const diffStatus = getDiffStatus(obj1, obj2, key);
+        ast.status = diffStatus;
+        ast.level = deepLevel;
+
+        const obj1Value = notANull(obj1[key]);
+        const obj2Value = notANull(obj2[key]);
+
+        if (diffStatus === 'identical') {
+          ast.value = isObject(obj1Value)
+            ? iter(obj1Value, obj2Value, [], (deepLevel + 1))
+            : obj1Value;
+        }
+        if (diffStatus === 'changed') {
+          ast.value = [
+            isObject(obj1Value)
+              ? iter(obj1Value, obj1Value, [], (deepLevel + 1))
+              : obj1Value.toString(),
+            isObject(obj2Value)
+              ? iter(obj2Value, obj2Value, [], (deepLevel + 1))
+              : obj2Value,
+          ];
+          ast.level = deepLevel;
+        }
+        if (diffStatus === 'added') {
+          ast.value = isObject(obj2Value)
+            ? iter(obj2Value, obj2Value, [], (deepLevel + 1))
+            : obj2Value;
+        }
+        if (diffStatus === 'deleted') {
+          ast.value = isObject(obj1Value)
+            ? iter(obj1Value, obj1Value, [], (deepLevel + 1))
+            : obj1Value;
+        }
+
+        return ast;
+      });
+  };
+
+  return iter(node1, node2, [], 0);
+};
+
+const genDiff = (filepath1, filepath2, format = 'stylish') => {
+  const node1 = parseFile(fileData(filepath1), fileFormat(filepath1));
+  const node2 = parseFile(fileData(filepath2), fileFormat(filepath2));
+
+  const ast = buildAst(node1, node2);
+
+  let formattedAst;
+  if (format === 'stylish') {
+    formattedAst = stylish(ast);
+  }
+
+  return formattedAst;
 };
 
 export default genDiff;
