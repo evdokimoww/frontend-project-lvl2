@@ -4,7 +4,7 @@ import { readFileSync } from 'fs';
 // eslint-disable-next-line import/extensions
 import parseFile from './parser.js';
 // eslint-disable-next-line import/extensions
-import stylish from './formatter.js';
+import astFormatting from './formatters/index.js';
 
 const fileFormat = (filepath) => path.extname(filepath);
 const fileData = (filepath) => readFileSync(path.resolve(process.cwd(), filepath), { encoding: 'ascii' });
@@ -79,18 +79,13 @@ const buildAst = (node1, node2) => {
   return iter(node1, node2, [], 0);
 };
 
-const genDiff = (filepath1, filepath2, format = 'stylish') => {
+const genDiff = (filepath1, filepath2, formatter = 'stylish') => {
   const node1 = parseFile(fileData(filepath1), fileFormat(filepath1));
   const node2 = parseFile(fileData(filepath2), fileFormat(filepath2));
 
   const ast = buildAst(node1, node2);
 
-  let formattedAst;
-  if (format === 'stylish') {
-    formattedAst = stylish(ast);
-  }
-
-  return formattedAst;
+  return astFormatting(formatter, ast);
 };
 
 export default genDiff;

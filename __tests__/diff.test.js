@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 
-const res = `{
+const resultStylish = `{
     common: {
       + follow: false
         setting1: Value 1
@@ -50,15 +50,38 @@ const res = `{
         fee: 100500
     }
 }`;
+const resultPlain = `Property 'common.follow' was added with value: false
+Property 'common.setting2' was removed
+Property 'common.setting3' was updated. From true to null
+Property 'common.setting4' was added with value: 'blah blah'
+Property 'common.setting5' was added with value: [complex value]
+Property 'common.setting6.doge.wow' was updated. From '' to 'so much'
+Property 'common.setting6.ops' was added with value: 'vops'
+Property 'group1.baz' was updated. From 'bas' to 'bars'
+Property 'group1.nest' was updated. From [complex value] to 'str'
+Property 'group2' was removed
+Property 'group3' was added with value: [complex value]`;
 
-test('diff1json', () => {
+test('diffStylishJson', () => {
   const fuxture1Path = getFixturePath('file1.json');
   const fuxture2Path = getFixturePath('file2.json');
-  expect(genDiff(fuxture1Path, fuxture2Path)).toEqual(res);
+  expect(genDiff(fuxture1Path, fuxture2Path)).toEqual(resultStylish);
 });
 
-test('diff1yaml', () => {
+test('diffStylishYaml', () => {
   const fuxture1Path = getFixturePath('file1.yaml');
   const fuxture2Path = getFixturePath('file2.yaml');
-  expect(genDiff(fuxture1Path, fuxture2Path)).toEqual(res);
+  expect(genDiff(fuxture1Path, fuxture2Path)).toEqual(resultStylish);
+});
+
+test('diffPlainJson', () => {
+  const fuxture1Path = getFixturePath('file1.json');
+  const fuxture2Path = getFixturePath('file2.json');
+  expect(genDiff(fuxture1Path, fuxture2Path, 'plain')).toEqual(resultPlain);
+});
+
+test('diffPlainYaml', () => {
+  const fuxture1Path = getFixturePath('file1.yaml');
+  const fuxture2Path = getFixturePath('file2.yaml');
+  expect(genDiff(fuxture1Path, fuxture2Path, 'plain')).toEqual(resultPlain);
 });

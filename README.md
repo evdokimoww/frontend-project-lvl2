@@ -12,3 +12,6 @@
 
 ### gendiff format output
 [![asciicast](https://asciinema.org/a/vTQro8QiOE0DltVOm0IWEHnLM.svg)](https://asciinema.org/a/vTQro8QiOE0DltVOm0IWEHnLM)
+
+### gendiff plain formatter
+[![asciicast](https://asciinema.org/a/d4M8D5Qgdf1cJvAevuuK5ztcj.svg)](https://asciinema.org/a/d4M8D5Qgdf1cJvAevuuK5ztcj)
