@@ -32,42 +32,53 @@ const buildAst = (node1, node2) => {
 
     return keys
       .map((key) => {
-        const ast = {
-          key,
-          status: getDiffStatus(obj1, obj2, key),
-          value: null,
-        };
+        const status = getDiffStatus(obj1, obj2, key);
 
         const obj1Value = notANull(obj1[key]);
         const obj2Value = notANull(obj2[key]);
 
-        if (ast.status === 'identical') {
-          ast.value = isObject(obj1Value)
-            ? iter(obj1Value, obj2Value)
-            : obj1Value;
-        }
-        if (ast.status === 'changed') {
-          ast.value = [
-            isObject(obj1Value)
-              ? iter(obj1Value, obj1Value)
-              : obj1Value.toString(),
-            isObject(obj2Value)
-              ? iter(obj2Value, obj2Value)
-              : obj2Value,
-          ];
-        }
-        if (ast.status === 'added') {
-          ast.value = isObject(obj2Value)
-            ? iter(obj2Value, obj2Value)
-            : obj2Value;
-        }
-        if (ast.status === 'deleted') {
-          ast.value = isObject(obj1Value)
-            ? iter(obj1Value, obj1Value)
-            : obj1Value;
+        if (status === 'identical') {
+          return {
+            key,
+            status,
+            value: isObject(obj1Value)
+              ? iter(obj1Value, obj2Value)
+              : obj1Value,
+          };
         }
 
-        return ast;
+        if (status === 'changed') {
+          return {
+            key,
+            status,
+            value: [
+              isObject(obj1Value)
+                ? iter(obj1Value, obj1Value)
+                : obj1Value.toString(),
+              isObject(obj2Value)
+                ? iter(obj2Value, obj2Value)
+                : obj2Value,
+            ],
+          };
+        }
+
+        if (status === 'added') {
+          return {
+            key,
+            status,
+            value: isObject(obj2Value)
+              ? iter(obj2Value, obj2Value)
+              : obj2Value,
+          };
+        }
+
+        return {
+          key,
+          status,
+          value: isObject(obj1Value)
+            ? iter(obj1Value, obj1Value)
+            : obj1Value,
+        };
       });
   };
 

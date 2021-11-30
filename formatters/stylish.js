@@ -24,17 +24,13 @@ const stylish = (ast) => {
           return `${changed1}\n${changed2}`;
         }
 
-        let statusIndent;
         if (status === 'added') {
-          statusIndent = addStatusIndent;
+          return `${indent.repeat(deep)}${addStatusIndent}${key}: ${isObject(value) ? iter(value, deep + 1) : value}`;
         }
         if (status === 'deleted') {
-          statusIndent = deleteStatusIndent;
+          return `${indent.repeat(deep)}${deleteStatusIndent}${key}: ${isObject(value) ? iter(value, deep + 1) : value}`;
         }
-        if (status === 'identical') {
-          statusIndent = indent;
-        }
-        return `${indent.repeat(deep)}${statusIndent}${key}: ${isObject(value) ? iter(value, deep + 1) : value}`;
+        return `${indent.repeat(deep)}${indent}${key}: ${isObject(value) ? iter(value, deep + 1) : value}`;
       });
     return [
       '{',
