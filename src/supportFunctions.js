@@ -5,7 +5,7 @@ export const normalizeValue = (val) => {
     || val === 'false'
     || val === 'null'
     || typeof val === 'boolean'
-    || typeof val === 'number') return `${val}`;
+    || typeof val === 'number') return val;
   if (typeof val === 'string') return `'${val}'`;
   return '[complex value]';
 };
