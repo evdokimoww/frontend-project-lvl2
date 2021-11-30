@@ -12,13 +12,13 @@ const stylish = (ast) => {
 
     const lines = currentValue
       .map(({
-        key, level, status, value,
+        key, status, value,
       }) => {
         if (status === 'changed') {
-          const changed1 = `${indent.repeat(level)}${deleteStatusIndent}${key}: ${isObject(value[0])
+          const changed1 = `${indent.repeat(deep)}${deleteStatusIndent}${key}: ${isObject(value[0])
             ? iter(value[0], deep + 1)
             : value[0]}`;
-          const changed2 = `${indent.repeat(level)}${addStatusIndent}${key}: ${isObject(value[1])
+          const changed2 = `${indent.repeat(deep)}${addStatusIndent}${key}: ${isObject(value[1])
             ? iter(value[1], deep + 1)
             : value[1]}`;
           return `${changed1}\n${changed2}`;
@@ -34,7 +34,7 @@ const stylish = (ast) => {
         if (status === 'identical') {
           statusIndent = indent;
         }
-        return `${indent.repeat(level)}${statusIndent}${key}: ${isObject(value) ? iter(value, deep + 1) : value}`;
+        return `${indent.repeat(deep)}${statusIndent}${key}: ${isObject(value) ? iter(value, deep + 1) : value}`;
       });
     return [
       '{',

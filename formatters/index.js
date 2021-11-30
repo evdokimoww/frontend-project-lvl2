@@ -3,21 +3,15 @@ import plain from './plain.js';
 import json from './json.js';
 
 const astFormatting = (formatter, ast) => {
-  let formattedAst;
-
-  if (formatter === 'stylish') {
-    formattedAst = stylish(ast);
-  }
-
   if (formatter === 'plain') {
-    formattedAst = plain(ast);
+    return plain(ast);
   }
 
   if (formatter === 'json') {
-    formattedAst = json(ast);
+    return json(ast);
   }
 
-  return formattedAst;
+  return stylish(ast);
 };
 
 export default astFormatting;

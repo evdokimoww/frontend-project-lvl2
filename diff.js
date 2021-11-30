@@ -26,47 +26,44 @@ const getDiffStatus = (object1, object2, key) => {
 };
 
 const buildAst = (node1, node2) => {
-  const iter = (obj1, obj2, result, deepLevel) => {
+  const iter = (obj1, obj2) => {
     const mergeNode = { ...obj1, ...obj2 };
-    const keys = Object.keys(mergeNode).sort();
+    const keys = _.sortBy(Object.keys(mergeNode));
 
     return keys
       .map((key) => {
         const ast = {
           key,
+          status: getDiffStatus(obj1, obj2, key),
+          value: null,
         };
-
-        const diffStatus = getDiffStatus(obj1, obj2, key);
-        ast.status = diffStatus;
-        ast.level = deepLevel;
 
         const obj1Value = notANull(obj1[key]);
         const obj2Value = notANull(obj2[key]);
 
-        if (diffStatus === 'identical') {
+        if (ast.status === 'identical') {
           ast.value = isObject(obj1Value)
-            ? iter(obj1Value, obj2Value, [], (deepLevel + 1))
+            ? iter(obj1Value, obj2Value)
             : obj1Value;
         }
-        if (diffStatus === 'changed') {
+        if (ast.status === 'changed') {
           ast.value = [
             isObject(obj1Value)
-              ? iter(obj1Value, obj1Value, [], (deepLevel + 1))
+              ? iter(obj1Value, obj1Value)
               : obj1Value.toString(),
             isObject(obj2Value)
-              ? iter(obj2Value, obj2Value, [], (deepLevel + 1))
+              ? iter(obj2Value, obj2Value)
               : obj2Value,
           ];
-          ast.level = deepLevel;
         }
-        if (diffStatus === 'added') {
+        if (ast.status === 'added') {
           ast.value = isObject(obj2Value)
-            ? iter(obj2Value, obj2Value, [], (deepLevel + 1))
+            ? iter(obj2Value, obj2Value)
             : obj2Value;
         }
-        if (diffStatus === 'deleted') {
+        if (ast.status === 'deleted') {
           ast.value = isObject(obj1Value)
-            ? iter(obj1Value, obj1Value, [], (deepLevel + 1))
+            ? iter(obj1Value, obj1Value)
             : obj1Value;
         }
 
@@ -74,7 +71,7 @@ const buildAst = (node1, node2) => {
       });
   };
 
-  return iter(node1, node2, [], 0);
+  return iter(node1, node2);
 };
 
 const genDiff = (filepath1, filepath2, formatter = 'stylish') => {
