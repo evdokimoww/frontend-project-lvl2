@@ -15,3 +15,6 @@
 
 ### gendiff plain formatter
 [![asciicast](https://asciinema.org/a/d4M8D5Qgdf1cJvAevuuK5ztcj.svg)](https://asciinema.org/a/d4M8D5Qgdf1cJvAevuuK5ztcj)
+
+### gendiff json formatter
+[![asciicast](https://asciinema.org/a/shRJCvGQkSiXMlmWklFfEDq5U.svg)](https://asciinema.org/a/shRJCvGQkSiXMlmWklFfEDq5U)

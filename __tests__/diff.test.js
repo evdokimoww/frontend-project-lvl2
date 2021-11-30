@@ -61,6 +61,7 @@ Property 'group1.baz' was updated. From 'bas' to 'bars'
 Property 'group1.nest' was updated. From [complex value] to 'str'
 Property 'group2' was removed
 Property 'group3' was added with value: [complex value]`;
+const resultJson = "[{\"key\":\"common\",\"status\":\"identical\",\"value\":[{\"key\":\"follow\",\"status\":\"added\",\"value\":false},{\"key\":\"setting1\",\"status\":\"identical\",\"value\":\"Value 1\"},{\"key\":\"setting2\",\"status\":\"deleted\",\"value\":200},{\"key\":\"setting3\",\"status\":\"changed\",\"value\":[\"true\",\"null\"]},{\"key\":\"setting4\",\"status\":\"added\",\"value\":\"blah blah\"},{\"key\":\"setting5\",\"status\":\"added\",\"value\":[{\"key\":\"key5\",\"status\":\"identical\",\"value\":\"value5\"}]},{\"key\":\"setting6\",\"status\":\"identical\",\"value\":[{\"key\":\"doge\",\"status\":\"identical\",\"value\":[{\"key\":\"wow\",\"status\":\"changed\",\"value\":[\"''\",\"'so much'\"]}]},{\"key\":\"key\",\"status\":\"identical\",\"value\":\"value\"},{\"key\":\"ops\",\"status\":\"added\",\"value\":\"vops\"}]}]},{\"key\":\"group1\",\"status\":\"identical\",\"value\":[{\"key\":\"baz\",\"status\":\"changed\",\"value\":[\"'bas'\",\"'bars'\"]},{\"key\":\"foo\",\"status\":\"identical\",\"value\":\"bar\"},{\"key\":\"nest\",\"status\":\"changed\",\"value\":[{},\"'str'\"]}]},{\"key\":\"group2\",\"status\":\"deleted\",\"value\":[{\"key\":\"abc\",\"status\":\"identical\",\"value\":12345},{\"key\":\"deep\",\"status\":\"identical\",\"value\":[{\"key\":\"id\",\"status\":\"identical\",\"value\":45}]}]},{\"key\":\"group3\",\"status\":\"added\",\"value\":[{\"key\":\"deep\",\"status\":\"identical\",\"value\":[{\"key\":\"id\",\"status\":\"identical\",\"value\":[{\"key\":\"number\",\"status\":\"identical\",\"value\":45}]}]},{\"key\":\"fee\",\"status\":\"identical\",\"value\":100500}]}]";
 
 test('diffStylishJson', () => {
   const fuxture1Path = getFixturePath('file1.json');
@@ -84,4 +85,16 @@ test('diffPlainYaml', () => {
   const fuxture1Path = getFixturePath('file1.yaml');
   const fuxture2Path = getFixturePath('file2.yaml');
   expect(genDiff(fuxture1Path, fuxture2Path, 'plain')).toEqual(resultPlain);
+});
+
+test('diffJsonJson', () => {
+  const fuxture1Path = getFixturePath('file1.json');
+  const fuxture2Path = getFixturePath('file2.json');
+  expect(genDiff(fuxture1Path, fuxture2Path, 'json')).toEqual(resultJson);
+});
+
+test('diffJsonYaml', () => {
+  const fuxture1Path = getFixturePath('file1.yaml');
+  const fuxture2Path = getFixturePath('file2.yaml');
+  expect(genDiff(fuxture1Path, fuxture2Path, 'json')).toEqual(resultJson);
 });
