@@ -1,12 +1,4 @@
-const isObject = (element) => typeof element === 'object';
-const normalizeValue = (val) => {
-  if (val === 'true'
-    || val === 'false'
-    || val === 'null'
-    || typeof val === 'boolean') return `${val}`;
-  if (typeof val === 'string') return `'${val}'`;
-  return '[complex value]';
-};
+import { isObject, normalizeValue } from '../src/supportFunctions.js';
 
 const plain = (ast) => {
   const iter = (currentValue, path) => {

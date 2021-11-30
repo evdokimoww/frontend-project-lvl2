@@ -3,11 +3,11 @@ import path from 'path';
 import { readFileSync } from 'fs';
 import parseFile from './parser.js';
 import astFormatting from './formatters/index.js';
+import { isObject } from './src/supportFunctions.js';
 
 const fileFormat = (filepath) => path.extname(filepath);
 const fileData = (filepath) => readFileSync(path.resolve(process.cwd(), filepath), { encoding: 'ascii' });
 
-const isObject = (element) => typeof element === 'object';
 const notANull = (element) => (element === null ? 'null' : element);
 
 const getDiffStatus = (object1, object2, key) => {

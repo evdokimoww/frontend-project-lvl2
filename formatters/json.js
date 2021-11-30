@@ -1,4 +1,4 @@
-const isObject = (element) => typeof element === 'object';
+import { isObject } from '../src/supportFunctions.js';
 
 const normalizeValue = (val) => {
   if (val === 'true'

@@ -1,4 +1,4 @@
-const isObject = (element) => typeof element === 'object';
+import { isObject } from '../src/supportFunctions.js';
 
 const stylish = (ast) => {
   const iter = (currentValue, deep) => {
