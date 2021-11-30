@@ -1,9 +1,7 @@
 import _ from 'lodash';
 import path from 'path';
 import { readFileSync } from 'fs';
-// eslint-disable-next-line import/extensions
 import parseFile from './parser.js';
-// eslint-disable-next-line import/extensions
 import astFormatting from './formatters/index.js';
 
 const fileFormat = (filepath) => path.extname(filepath);

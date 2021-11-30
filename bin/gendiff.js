@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-// eslint-disable-next-line import/extensions
 import genDiff from '../diff.js';
-// eslint-disable-next-line import/extensions
 
 const program = new Command();
 
