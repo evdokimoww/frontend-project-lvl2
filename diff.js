@@ -11,12 +11,15 @@ const notANull = (element) => (element === null ? 'null' : element);
 
 const getDiffStatus = (object1, object2, key) => {
   if (_.has(object1, key) && _.has(object2, key)) {
-    if ((_.isObject(object1[key]) && _.isObject(object2[key])) || object1[key] === object2[key]) {
+    if (_.isObject(object1[key]) && _.isObject(object2[key])) {
+      return 'sameNameObjects';
+    }
+    if (object1[key] === object2[key]) {
       return 'identical';
     }
-  }
-  if (_.has(object1, key) && _.has(object2, key) && object1[key] !== object2[key]) {
-    return 'changed';
+    if (object1[key] !== object2[key]) {
+      return 'changed';
+    }
   }
   if (!_.has(object1, key)) {
     return 'added';
@@ -35,6 +38,14 @@ const buildAst = (node1, node2) => {
 
         const obj1Value = notANull(obj1[key]);
         const obj2Value = notANull(obj2[key]);
+
+        if (status === 'sameNameObjects') {
+          return {
+            key,
+            status,
+            value: iter(obj1Value, obj2Value),
+          };
+        }
 
         if (status === 'identical') {
           return {

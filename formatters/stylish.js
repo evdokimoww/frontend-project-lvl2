@@ -23,14 +23,16 @@ const stylish = (ast) => {
             : value[1]}`;
           return `${changed1}\n${changed2}`;
         }
-
+        if (status === 'sameNameObjects') {
+          return `${indent.repeat(deep)}${indent}${key}: ${iter(value, deep + 1)}`;
+        }
         if (status === 'added') {
           return `${indent.repeat(deep)}${addStatusIndent}${key}: ${_.isObject(value) ? iter(value, deep + 1) : value}`;
         }
         if (status === 'deleted') {
           return `${indent.repeat(deep)}${deleteStatusIndent}${key}: ${_.isObject(value) ? iter(value, deep + 1) : value}`;
         }
-        return `${indent.repeat(deep)}${indent}${key}: ${_.isObject(value) ? iter(value, deep + 1) : value}`;
+        return `${indent.repeat(deep)}${indent}${key}: ${value}`;
       });
     return [
       '{',

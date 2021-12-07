@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { normalizeValue } from '../src/supportFunctions.js';
 
 const plain = (ast) => {
@@ -11,10 +10,8 @@ const plain = (ast) => {
       .map(({
         key, status, value,
       }) => {
-        if (status === 'identical') {
-          if (_.isObject(value)) {
-            return iter(value, [...path, key]);
-          }
+        if (status === 'sameNameObjects') {
+          return iter(value, [...path, key]);
         }
         if (status === 'added') {
           return `Property '${[...path, key].join('.')}' was added with value: ${normalizeValue(value)}`;
