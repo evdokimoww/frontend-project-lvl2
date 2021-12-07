@@ -1,18 +1,17 @@
 import _ from 'lodash';
 import path from 'path';
 import { readFileSync } from 'fs';
-import parseFile from './parser.js';
-import astFormatting from './formatters/index.js';
-import { isObject } from './src/supportFunctions.js';
+import parseData from './parser.js';
+import formatAst from './formatters/index.js';
 
-const fileFormat = (filepath) => path.extname(filepath);
-const fileData = (filepath) => readFileSync(path.resolve(process.cwd(), filepath), { encoding: 'ascii' });
+const getFileFormat = (filepath) => path.extname(filepath);
+const getFileData = (filepath) => readFileSync(path.resolve(process.cwd(), filepath), { encoding: 'ascii' });
 
 const notANull = (element) => (element === null ? 'null' : element);
 
 const getDiffStatus = (object1, object2, key) => {
   if (_.has(object1, key) && _.has(object2, key)) {
-    if ((typeof object1[key] === 'object' && typeof object2[key] === 'object') || object1[key] === object2[key]) {
+    if ((_.isObject(object1[key]) && _.isObject(object2[key])) || object1[key] === object2[key]) {
       return 'identical';
     }
   }
@@ -41,7 +40,7 @@ const buildAst = (node1, node2) => {
           return {
             key,
             status,
-            value: isObject(obj1Value)
+            value: _.isObject(obj1Value)
               ? iter(obj1Value, obj2Value)
               : obj1Value,
           };
@@ -52,10 +51,10 @@ const buildAst = (node1, node2) => {
             key,
             status,
             value: [
-              isObject(obj1Value)
+              _.isObject(obj1Value)
                 ? iter(obj1Value, obj1Value)
                 : obj1Value.toString(),
-              isObject(obj2Value)
+              _.isObject(obj2Value)
                 ? iter(obj2Value, obj2Value)
                 : obj2Value,
             ],
@@ -66,7 +65,7 @@ const buildAst = (node1, node2) => {
           return {
             key,
             status,
-            value: isObject(obj2Value)
+            value: _.isObject(obj2Value)
               ? iter(obj2Value, obj2Value)
               : obj2Value,
           };
@@ -75,7 +74,7 @@ const buildAst = (node1, node2) => {
         return {
           key,
           status,
-          value: isObject(obj1Value)
+          value: _.isObject(obj1Value)
             ? iter(obj1Value, obj1Value)
             : obj1Value,
         };
@@ -86,12 +85,12 @@ const buildAst = (node1, node2) => {
 };
 
 const genDiff = (filepath1, filepath2, formatter = 'stylish') => {
-  const node1 = parseFile(fileData(filepath1), fileFormat(filepath1));
-  const node2 = parseFile(fileData(filepath2), fileFormat(filepath2));
+  const node1 = parseData(getFileData(filepath1), getFileFormat(filepath1));
+  const node2 = parseData(getFileData(filepath2), getFileFormat(filepath2));
 
   const ast = buildAst(node1, node2);
 
-  return astFormatting(formatter, ast);
+  return formatAst(ast, formatter);
 };
 
 export default genDiff;

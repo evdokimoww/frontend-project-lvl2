@@ -1,4 +1,5 @@
-import { isObject, normalizeValue } from '../src/supportFunctions.js';
+import _ from 'lodash';
+import { normalizeValue } from '../src/supportFunctions.js';
 
 const plain = (ast) => {
   const iter = (currentValue, path) => {
@@ -11,7 +12,7 @@ const plain = (ast) => {
         key, status, value,
       }) => {
         if (status === 'identical') {
-          if (isObject(value)) {
+          if (_.isObject(value)) {
             return iter(value, [...path, key]);
           }
         }

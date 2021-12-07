@@ -1,5 +1,4 @@
-export const isObject = (element) => typeof element === 'object';
-
+// eslint-disable-next-line import/prefer-default-export
 export const normalizeValue = (val) => {
   if (val === 'true' || val === true) return true;
   if (val === 'false' || val === false) return false;

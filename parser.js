@@ -1,11 +1,15 @@
 import yaml from 'js-yaml';
 
-const parseFile = (data, ext) => {
+const parseData = (data, ext) => {
+  if (ext === '.json') {
+    return JSON.parse(data);
+  }
+
   if (ext === '.yml' || ext === '.yaml') {
     return yaml.load(data);
   }
 
-  return JSON.parse(data);
+  throw new Error(`${ext}: invalid file format`);
 };
 
-export default parseFile;
+export default parseData;
