@@ -1,7 +1,5 @@
 import _ from 'lodash';
 
-const notANull = (element) => (element === null ? 'null' : element);
-
 const getDiffStatus = (object1, object2, key) => {
   if (_.has(object1, key) && _.has(object2, key)) {
     if (_.isObject(object1[key]) && _.isObject(object2[key])) {
@@ -29,14 +27,14 @@ const buildAst = (node1, node2) => {
       .map((key) => {
         const status = getDiffStatus(obj1, obj2, key);
 
-        const obj1Value = notANull(obj1[key]);
-        const obj2Value = notANull(obj2[key]);
+        const value1 = obj1[key];
+        const value2 = obj2[key];
 
         if (status === 'nested') {
           return {
             key,
             status,
-            value: iter(obj1Value, obj2Value),
+            value: iter(value1, value2),
           };
         }
 
@@ -44,9 +42,9 @@ const buildAst = (node1, node2) => {
           return {
             key,
             status,
-            value: _.isObject(obj1Value)
-              ? iter(obj1Value, obj2Value)
-              : obj1Value,
+            value: _.isObject(value1)
+              ? iter(value1, value2)
+              : value1,
           };
         }
 
@@ -55,12 +53,12 @@ const buildAst = (node1, node2) => {
             key,
             status,
             value: [
-              _.isObject(obj1Value)
-                ? iter(obj1Value, obj1Value)
-                : obj1Value.toString(),
-              _.isObject(obj2Value)
-                ? iter(obj2Value, obj2Value)
-                : obj2Value,
+              _.isObject(value1)
+                ? iter(value1, value1)
+                : value1,
+              _.isObject(value2)
+                ? iter(value2, value2)
+                : value2,
             ],
           };
         }
@@ -69,18 +67,18 @@ const buildAst = (node1, node2) => {
           return {
             key,
             status,
-            value: _.isObject(obj2Value)
-              ? iter(obj2Value, obj2Value)
-              : obj2Value,
+            value: _.isObject(value2)
+              ? iter(value2, value2)
+              : value2,
           };
         }
 
         return {
           key,
           status,
-          value: _.isObject(obj1Value)
-            ? iter(obj1Value, obj1Value)
-            : obj1Value,
+          value: _.isObject(value1)
+            ? iter(value1, value1)
+            : value1,
         };
       });
   };
