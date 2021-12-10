@@ -23,7 +23,7 @@ const stylish = (ast) => {
             : value[1]}`;
           return `${changed1}\n${changed2}`;
         }
-        if (status === 'sameNameObjects') {
+        if (status === 'nested') {
           return `${indent.repeat(deep)}${indent}${key}: ${iter(value, deep + 1)}`;
         }
         if (status === 'added') {

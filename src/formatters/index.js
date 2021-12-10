@@ -2,20 +2,20 @@ import stylish from './stylish.js';
 import plain from './plain.js';
 import json from './json.js';
 
-const formatAst = (ast, formatter) => {
-  if (formatter === 'stylish') {
+const formatAst = (ast, format) => {
+  if (format === 'stylish') {
     return stylish(ast);
   }
 
-  if (formatter === 'plain') {
+  if (format === 'plain') {
     return plain(ast);
   }
 
-  if (formatter === 'json') {
+  if (format === 'json') {
     return json(ast);
   }
 
-  throw new Error(`formatter "${formatter}" is not defined`);
+  throw new Error(`formatter "${format}" is not defined`);
 };
 
 export default formatAst;

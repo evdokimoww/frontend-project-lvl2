@@ -17,7 +17,7 @@ const plain = (ast) => {
       .map(({
         key, status, value,
       }) => {
-        if (status === 'sameNameObjects') {
+        if (status === 'nested') {
           return iter(value, [...path, key]);
         }
         if (status === 'added') {
